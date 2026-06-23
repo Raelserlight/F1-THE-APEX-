@@ -50,8 +50,8 @@ function initDashboard() {
       const driverName = driversList[index] || data.driverId;
       const carModel = carsList[index] || data.carId;
       
-      const driverThumbPath = `../assets/images/driver/thumb/d-${year}-t.jpg`;
-      const carThumbPath = `../assets/images/car/thumb/c-${year}-t.jpg`;
+      const driverThumbPath = `./assets/images/driver/thumb/d-${year}-t.jpg`;
+      const carThumbPath = `./assets/images/car/thumb/c-${year}-t.jpg`;
 
       htmlString += `
         <div class="glass-panel dashboard-row" onclick="window.openDetail('${docId}', ${year}, '${data.driverId}', '${data.carId}', '${driverName}', '${carModel}')">
@@ -128,8 +128,8 @@ window.openDetail = async function(docId, year, driverId, carId, driverName, car
     let driverMarkdown = driverData.markdownContent ? marked.parse(driverData.markdownContent) : '<p style="color:#aaa; text-align:center;">รอการอัปเดตข้อมูล...</p>';
     let carMarkdown = carData.markdownContent ? marked.parse(carData.markdownContent) : '<p style="color:#aaa; text-align:center;">รอการอัปเดตข้อมูล...</p>';
 
-    let driverImg = `../assets/images/driver/detail/d-${year}-d.jpg`;
-    let carImg = `../assets/images/car/detail/c-${year}-d.jpg`;
+    let driverImg = `./assets/images/driver/detail/d-${year}-d.jpg`;
+    let carImg = `./assets/images/car/detail/c-${year}-d.jpg`;
 
     detailContent.innerHTML = `
       <h1 style="color: var(--f1-red); font-size: 36px; text-align: center; margin-bottom: 35px; font-weight: 900;">${year} CHAMPION LEGACY</h1>
