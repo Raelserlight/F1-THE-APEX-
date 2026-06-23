@@ -1,5 +1,5 @@
+<img width="1720" height="991" alt="page" src="https://github.com/user-attachments/assets/9870dea6-f624-4a34-8834-89823fb0faee" />
 
-![หน้าเเรก](page.png)
 
 
 # Champions Legacy Telemetry
