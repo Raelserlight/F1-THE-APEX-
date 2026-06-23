@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Motorsport Encyclopedia | Dev & Community</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    :root {
+      --f1-red: #e10600;
+      --dark-bg: #070707;
+      --glass-bg: rgba(20, 20, 20, 0.65);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --text-main: #ffffff;
+      --text-muted: #aaaaaa;
+      --accent-blue: #007aff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, sans-serif; }
+    
+    body {
+      background-color: var(--dark-bg);
+      background-image: url('bg2.jpg'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+
+    header {
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 2px solid var(--f1-red);
+      padding: 35px 25px; 
+      text-align: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    header h1 { font-size: 38px; letter-spacing: 4px; font-weight: 900; }
+
+    .container { max-width: 1200px; margin: auto; padding: 50px 20px; }
+    .view-section { display: none; animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+    .view-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+    .glass-panel {
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .dashboard-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 25px 40px; 
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .dashboard-row:hover {
+      border-color: rgba(225, 6, 0, 0.6);
+      background: rgba(255, 255, 255, 0.08);
+      transform: scale(1.02);
+    }
+
+    .year-badge {
+      font-size: 38px; font-weight: 900; color: var(--f1-red); width: 120px;
+      letter-spacing: -1px;
+    }
+
+    .info-group { display: flex; align-items: center; gap: 20px; flex: 1; }
+    .avatar {
+      width: 65px; height: 65px; border-radius: 50%; object-fit: cover;
+      border: 2px solid rgba(255,255,255,0.2); background: #111;
+      image-rendering: -webkit-optimize-contrast;
+    }
+    .info-text h3 { font-size: 19px; margin-bottom: 0px; font-weight: 700; color: #fff; }
+    .info-text p { font-size: 14px; color: var(--text-muted); margin-bottom: 5px; }
+
+    .action-group { display: flex; gap: 12px; align-items: center; }
+    
+    .btn-action.like {
+      background: rgba(255,255,255,0.1); 
+      border: 1px solid var(--glass-border);
+      color: white; 
+      padding: 15px 35px; 
+      border-radius: 40px; 
+      cursor: pointer;
+      display: flex; align-items: center; gap: 10px; 
+      font-weight: bold; font-size: 18px; 
+      transition: all 0.2s;
+    }
+    .btn-action.like:hover { 
+      border-color: #ff3b30; 
+      color: #ff3b30; 
+      background: rgba(255, 59, 48, 0.15); 
+      transform: scale(1.05);
+    }
+    
+    .btn-back {
+      background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--glass-border);
+      padding: 12px 25px; border-radius: 8px;
+      font-size: 16px; cursor: pointer; margin-bottom: 25px; transition: all 0.2s;
+    }
+    .btn-back:hover { background: var(--f1-red); border-color: var(--f1-red); }
+
+    .detail-header { padding: 30px; margin-bottom: 30px; }
+
+    .specs-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-top: 20px;
+      align-items: start; 
+    }
+
+    .spec-card {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .spec-hero {
+      width: 100%;
+      height: 250px; 
+      object-fit: contain; 
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      image-rendering: -webkit-optimize-contrast;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .markdown-body { 
+      background: rgba(255, 255, 255, 0.03); 
+      padding: 20px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.05);
+      line-height: 1.8; font-size: 15px; color: #e0e0e0; 
+    }
+    .markdown-body h1, .markdown-body h2, .markdown-body h3 { color: var(--f1-red); margin-top: 20px; margin-bottom: 12px; }
+    .markdown-body ul { padding-left: 20px; margin-bottom: 15px; }
+    .markdown-body li { margin-bottom: 8px; }
+
+    .tabs-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; align-items: start; }
+    .interactive-box { padding: 25px; margin-bottom: 20px; } /* ดันไม่ให้ติดกับคอมเมนต์ด้านล่าง */
+    .interactive-box h3 { font-size: 18px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+    .comment-box { display: flex; flex-direction: column; gap: 12px; }
+    .input-field {
+      width: 100%; padding: 12px 15px; background: rgba(0,0,0,0.6); border: 1px solid var(--glass-border);
+      color: white; border-radius: 8px; outline: none; font-size: 14px; transition: border-color 0.2s;
+    }
+    .input-field:focus { border-color: var(--f1-red); }
+    .input-field.blue-focus:focus { border-color: var(--accent-blue); }
+    textarea.input-field { resize: vertical; min-height: 80px; }
+    .btn-submit { background: var(--f1-red); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+    .btn-submit:hover { background: #ff1e15; }
+    .btn-submit.blue { background: var(--accent-blue); }
+    .btn-submit.blue:hover { background: #0066cc; }
+
+    .data-list { display: flex; flex-direction: column; gap: 15px; }
+    .data-item { 
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
+      padding: 20px; 
+      border-radius: 12px; 
+      border: 1px solid var(--glass-border);
+      border-left: 4px solid var(--f1-red); 
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    }
+    .data-item.blue-border { border-left-color: var(--accent-blue); }
+    .data-item strong { font-size: 14px; color: #fff; display: block; margin-bottom: 5px; }
+    .data-item p { margin-top: 0; font-size: 14px; line-height: 1.5; color: #ccc; }
+
+    @media (max-width: 900px) {
+      .dashboard-row { flex-direction: column; align-items: flex-start; gap: 20px; }
+      .action-group { width: 100%; justify-content: flex-start; border-top: 1px solid var(--glass-border); padding-top: 15px; }
+      .tabs-container, .specs-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>THE APEX OF <span style="color:var(--f1-red)">FORMULA</span></h1>
+  </header>
+
+  <div class="container">
+    <main id="timeline-view" class="view-section active">
+      <div id="list-container"><h2 style="text-align:center; color:var(--text-muted); padding-top:50px;">Proceesing...</h2></div>
+    </main>
+
+    <main id="detail-view" class="view-section">
+      <button class="btn-back" onclick="window.navigateBack()">&#8592; Back to Dashboard</button>
+      
+      <div class="glass-panel detail-header" id="detail-content"></div>
+
+      <div class="tabs-container">
+        
+        <div>
+          <div class="glass-panel interactive-box">
+            <h3> Comment </h3>
+            <div class="comment-box">
+              <textarea id="comment-input" class="input-field" placeholder="Comment Now..."></textarea>
+              <button class="btn-submit" onclick="window.postComment()">Send</button>
+            </div>
+          </div>
+          <div class="data-list" id="comment-list"></div>
+        </div>
+
+        <div>
+          <div class="glass-panel interactive-box">
+            <h3>Suggest Edit</h3>
+            <div class="comment-box">
+              <textarea id="suggestion-input" class="input-field blue-focus" placeholder="Send Suggest Edit Now..."></textarea>
+              <button class="btn-submit blue" onclick="window.postSuggestion()">Send</button>
+            </div>
+          </div>
+          <div class="data-list" id="suggestion-list"></div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
