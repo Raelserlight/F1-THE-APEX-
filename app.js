@@ -52,6 +52,9 @@ function initDashboard() {
       
       const driverThumbPath = `./assets/images/driver/thumb/d-${year}-t.jpg`;
       const carThumbPath = `./assets/images/car/thumb/c-${year}-t.jpg`;
+      const hasLiked = localStorage.getItem(`liked_season_${docId}`) === 'true';
+      const buttonStyle = hasLiked ? 'style="opacity: 0.5; cursor: not-allowed;"' : '';
+      const buttonDisabled = hasLiked ? 'disabled' : '';
 
       htmlString += `
         <div class="glass-panel dashboard-row" onclick="window.openDetail('${docId}', ${year}, '${data.driverId}', '${data.carId}', '${driverName}', '${carModel}')">
@@ -74,7 +77,7 @@ function initDashboard() {
           </div>
 
           <div class="action-group">
-            <button class="btn-action like" onclick="window.likeSeason(event, '${docId}')">
+            <button class="btn-action like" ${buttonDisabled} ${buttonStyle} onclick="window.likeSeason(event, '${docId}')">
               ❤️ <span id="like-count-${docId}">${likes}</span>
             </button>
           </div>
@@ -88,6 +91,15 @@ function initDashboard() {
 
 window.likeSeason = async function(event, docId) {
   event.stopPropagation(); 
+
+  if (localStorage.getItem(`liked_season_${docId}`) === 'true') return;
+
+  const btn = event.currentTarget;
+  btn.disabled = true;
+  btn.style.opacity = "0.5";
+  btn.style.cursor = "not-allowed";
+  localStorage.setItem(`liked_season_${docId}`, 'true');
+
   const docRef = doc(db, "seasons", docId);
   try { await updateDoc(docRef, { likes: increment(1) }); } 
   catch (error) { console.error(error); }
@@ -113,7 +125,6 @@ window.openDetail = async function(docId, year, driverId, carId, driverName, car
   timelineView.classList.remove('active');
   detailView.classList.add('active');
   window.scrollTo(0, 0);
-
   detailContent.innerHTML = `<h2 style="text-align:center; color:var(--text-muted);">Processing...</h2>`;
 
   try {
@@ -138,7 +149,6 @@ window.openDetail = async function(docId, year, driverId, carId, driverName, car
         <div class="spec-card">
           <h2 style="color: white; font-size: 22px; margin-bottom: 15px; border-left: 4px solid var(--f1-red); padding-left: 10px;">World Champion Driver</h2>
           <img src="${driverImg}" class="spec-hero" onerror="this.src='https://placehold.co/800x400/222/FFF?text=Driver+${year}'">
-          <!-- โชว์ชื่อที่ดึงมาจากหน้าแรก -->
           <h3 style="color: var(--f1-red); font-size: 26px; margin-bottom: 15px; text-align: center;">${driverName}</h3>
           <div class="markdown-body">${driverMarkdown}</div>
         </div>
@@ -146,7 +156,6 @@ window.openDetail = async function(docId, year, driverId, carId, driverName, car
         <div class="spec-card">
           <h2 style="color: white; font-size: 22px; margin-bottom: 15px; border-left: 4px solid var(--accent-blue); padding-left: 10px;">Championship Car</h2>
           <img src="${carImg}" class="spec-hero" onerror="this.src='https://placehold.co/800x400/222/FFF?text=Car+${year}'">
-          <!-- โชว์ชื่อที่ดึงมาจากหน้าแรก -->
           <h3 style="color: var(--f1-red); font-size: 26px; margin-bottom: 15px; text-align: center;">${carModel}</h3>
           <div class="markdown-body">${carMarkdown}</div>
         </div>
