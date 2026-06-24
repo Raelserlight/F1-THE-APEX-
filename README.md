@@ -30,7 +30,7 @@
 3. รันไฟล์ `index.html` ผ่าน Local Server ( เช่นส่วนเสริม **Live Server** ใน VS Code ที่ทุกคนมีกันอยู่เเล้ว )
 
 
-* ** หวังว่าจะเอนจอยนะครับ ~~
+*  หวังว่าจะเอนจอยนะครับ ~~
 
 ---
 *Developed By [Estazolam] passion for Motorsport & Web Development.* 
