@@ -3,7 +3,7 @@
 
 
 # Champions Legacy Telemetry
-**สารานุกรมมอเตอร์สปอร์ต (1950-2025)**
+**สารานุกรมฟอร์มูล่าวัน (1950-2025)**
 
  **[คลิกเข้าสู่เว็บไซต์ (Live Demo)](https://raelserlight.github.io/F1-THE-APEX-/)**
 
